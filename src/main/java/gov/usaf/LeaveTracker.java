@@ -1,5 +1,6 @@
 package gov.usaf;
 
+
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -28,14 +29,14 @@ public class LeaveTracker {
                         (r.getStatus().getValue0() ==  LeaveRequest.Status.CLOSED ||
                          r.getStatus().getValue0() == LeaveRequest.Status.APPROVED ) &&
                         r.getRequester()==user.getId() &&
-                        r.endDate().getYear() >= LocalDate.now().getYear())
+                        r.endDate().getYear() >= LocalDate.now().getYear() &&
+                        r.startDate().getYear() <= LocalDate.now().getYear())
                 .mapToInt(request -> {
                     if (request.startDate().getYear() == LocalDate.now().getYear()) {
                         return (int) (request.startDate().until(request.endDate(), ChronoUnit.DAYS) + 1);
-                    }else if (request.startDate().getYear() < LocalDate.now().getYear()) {
+                    }else { // start date is < current year
                         return (int) (LocalDate.of(LocalDate.now().getYear(),1,1).until(request.endDate(), ChronoUnit.DAYS) + 1);
                     }
-                    return 0;
                 })
                 .sum();
         return getYearlyLeave(user)-daysUsed;
@@ -59,6 +60,7 @@ public class LeaveTracker {
         int days = (int)(request.from.until(request.to, ChronoUnit.DAYS)+1);
         if (getRemainingLeave(user) >= days) {
             leaveRequests.add(request);
+            request.setId(leaveRequests.indexOf(request));
             return "Leave has been submitted";
         }else{
             return "Insufficient leave balance";

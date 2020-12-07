@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LeaveTrackerTest {
@@ -22,6 +21,8 @@ public class LeaveTrackerTest {
     LeaveRequest OneDay;
     LeaveRequest FortyFiveDay;
     LeaveRequest ThirtyDay;
+    LeaveRequest CrossYear;
+    LeaveRequest Old;
     @BeforeEach
     public void setup() {
         userTracker = new UserTracker();
@@ -33,6 +34,8 @@ public class LeaveTrackerTest {
         OneDay = new LeaveRequest(LocalDate.of(2020,1,1),LocalDate.of(2020,1,1));
         ThirtyDay = new LeaveRequest(LocalDate.of(2020,1,1),LocalDate.of(2020,1,30));
         FortyFiveDay=new LeaveRequest(LocalDate.of(2020,1,1),LocalDate.of(2020,2,14));
+        CrossYear=new LeaveRequest(LocalDate.of(2019,12,30),LocalDate.of(2020,1,1));
+        Old=new LeaveRequest(LocalDate.of(2019,12,1),LocalDate.of(2019,12,5));
     }
 
     @Test
@@ -47,10 +50,17 @@ public class LeaveTrackerTest {
     }
     @Test
     public void ShouldReturnRemainingLeave() {
-        leaveTracker.requestLeave(user, OneDay);
+        leaveTracker.requestLeave(user, CrossYear);
         leaveTracker.approveLeave(supervisor, leaveTracker.getOpenLeaveRequests(user).get(0).getId());
         assertEquals(29,leaveTracker.getRemainingLeave(user));
     }
+    @Test
+    public void ShouldNotRemoveLeaveForLastYear() {
+        leaveTracker.requestLeave(user, Old);
+        leaveTracker.approveLeave(supervisor, leaveTracker.getOpenLeaveRequests(user).get(0).getId());
+        assertEquals(30,leaveTracker.getRemainingLeave(user));
+    }
+
     @Test
     public void ShouldProvideSuccessMessage() {
 

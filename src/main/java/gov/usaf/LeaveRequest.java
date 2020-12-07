@@ -27,16 +27,14 @@ public class LeaveRequest {
     }
 
 
-    public LeaveRequest(int id, LocalDate from, LocalDate to) {
+/*    public LeaveRequest(int id, LocalDate from, LocalDate to) {
         this(from,to);
         this.id=id;
-    }
+    }*/
     public void setId(int id) {
         this.id=id;
     }
-    public LeaveRequest() {
 
-    }
     public LocalDate startDate() {
         return this.from;
     }
@@ -66,6 +64,6 @@ public class LeaveRequest {
         APPROVED,
         DENIED,
         CLOSED
-    };
+    }
 
 }
