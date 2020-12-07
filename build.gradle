@@ -14,5 +14,6 @@ repositories {
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.4.0"
     compile 'org.javatuples:javatuples:1.2'
-    testImplementation 'org.hamcrest:hamcrest:2.2'
+    //testImplementation 'org.hamcrest:hamcrest:2.2'
+    compile group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.2'
 }
